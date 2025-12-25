@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的文章 - 个人博客</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">MySpace</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="blog.html" class="active">我的文章</a></li>
+          <li><a href="gallery.html">圣诞特辑</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)"
+              >关于站长 <span class="arrow"></span
+            ></a>
+            <ul class="dropdown-content">
+              <li><a href="about.html">个人简介</a></li>
+              <li><a href="contact.html">联系我</a></li>
+              <li><a href="game.html">找我开黑</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="blog-wrapper">
+        <!-- Main Content (Floated Left) -->
+        <div class="blog-main">
+          <!-- New Article: Gemini Free -->
+          <article class="blog-post">
+            <img
+              class="blog-image"
+              src="img/google-gemini.jpg"
+              alt="Google Gemini Advanced"
+            />
+            <h3>薅羊毛预警！手把手教你免费白嫖一年Google Gemini Advanced</h3>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem">
+              发布于 2025-12-22
+            </p>
+            <p>
+              立省1400元！Gemini Advanced
+              一年权益免费领？本文提供保姆级实操攻略，利用学生优惠漏洞配合辅助工具，只需5分钟，普通账号也能轻松通过验证。不仅能用上最强
+              AI 模型，还能白嫖 2TB Google One 空间。手慢无，速来上车！
+            </p>
+            <a
+              href="article-gemini-free.html"
+              style="
+                color: var(--primary-color);
+                font-weight: bold;
+                margin-top: 10px;
+                display: inline-block;
+              "
+              >阅读详细教程 &rarr;</a
+            >
+          </article>
+          <!-- New Article: Obsidian + GitHub -->
+          <article class="blog-post">
+            <img
+              class="blog-image"
+              src="img/obsidian-git.png"
+              alt="Obsidian + GitHub Workflow"
+            />
+            <h3>告别笔记焦虑：我用Obsidian + GitHub + AI 打造的“永久”知识库</h3>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem">
+              发布于 2025-12-21
+            </p>
+            <p>
+              你是否担心笔记应用倒闭数据丢失？是否厌倦了云同步的月费？本文分享一套被称为“邪修”的终极方案：利用
+              Git 实现免费无限同步，用 Gemini AI
+              直接接管本地文件进行辅助写作，彻底解决同步收费、AI
+              鸡肋和图片管理混乱三大痛点，构建属于你自己的、永不丢失的数字花园。
+            </p>
+            <a
+              href="article-obsidian-git.html"
+              style="
+                color: var(--primary-color);
+                font-weight: bold;
+                margin-top: 10px;
+                display: inline-block;
+              "
+              >阅读详细教程 &rarr;</a
+            >
+          </article>
+          <!-- New Article: Xiaomi Pad 5 Dual Boot -->
+          <article class="blog-post">
+            <img
+              class="blog-image"
+              src="img/xiaomi-pad-5.png"
+              alt="Xiaomi Pad 5 Running Windows 11"
+            />
+            <h3>耐刷王！小米平板5刷澎湃OS+Win11双系统保姆级指南</h3>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem">
+              发布于 2025-10-20
+            </p>
+            <p>
+              小米平板5不仅是Android平板，更是一台可以运行Windows
+              11的“小电脑”！本教程将手把手教你如何解锁Bootloader，使用Mindows工具箱一步到位安装HyperOS与Win11双系统。从驱动安装到系统切换，保姆级细节教学，挖掘骁龙860的极致潜力，让你的平板生产力翻倍！
+            </p>
+            <a
+              href="article-xiaomi-pad-5.html"
+              style="
+                color: var(--primary-color);
+                font-weight: bold;
+                margin-top: 10px;
+                display: inline-block;
+              "
+              >阅读详细教程 &rarr;</a
+            >
+          </article>
+        </div>
+
+        <!-- Sidebar (Floated Right) -->
+        <aside class="blog-sidebar">
+          <h3>分类目录</h3>
+          <ul style="margin: 1rem 0 2rem 0">
+            <li
+              style="
+                margin-bottom: 0.5rem;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 5px;
+              "
+            >
+              <a href="#">羊毛福利 (1)</a>
+            </li>
+            <li
+              style="
+                margin-bottom: 0.5rem;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 5px;
+              "
+            >
+              <a href="#">效率工具 (1)</a>
+            </li>
+            <li
+              style="
+                margin-bottom: 0.5rem;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 5px;
+              "
+            >
+              <a href="#">技术教程 (1)</a>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <p>Designed by <span class="footer-highlight">蒋智宇</span></p>
+        <p>
+          学号: <span class="footer-highlight">2301120060</span> | 班级:
+          <span class="footer-highlight">软件工程B231</span>
+        </p>
+        <p>联系方式: 2193887863@qq.com</p>
+        <p id="current-time">加载时间中...</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

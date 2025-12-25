@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>圣诞特辑 - 3D光子树</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Specific Styles for this 3D Page */
+      body {
+        background-color: #000; /* Dark background for particles */
+        color: #fff;
+        overflow: hidden; /* Prevent scrolling for the 3D experience */
+      }
+
+      /* Overwrite Header for this page specifically to look transparent/cool */
+      header {
+        background-color: rgba(0, 0, 0, 0.5);
+        box-shadow: none;
+        backdrop-filter: blur(5px);
+      }
+
+      .logo,
+      .nav-links li a {
+        color: white;
+      }
+
+      /* 3D Canvas Container */
+      #tree-container {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1; /* Behind header but front of background */
+        cursor: grab;
+      }
+
+      #tree-container:active {
+        cursor: grabbing;
+      }
+
+      .instruction-overlay {
+        position: absolute;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        pointer-events: none;
+        color: rgba(255, 255, 255, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">MySpace</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="blog.html">我的文章</a></li>
+          <li><a href="gallery.html" class="active">圣诞特辑</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)"
+              >关于站长 <span class="arrow"></span
+            ></a>
+            <ul class="dropdown-content">
+              <li><a href="about.html">个人简介</a></li>
+              <li><a href="contact.html">联系我</a></li>
+              <li><a href="game.html">找我开黑</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <canvas id="tree-container"></canvas>
+
+    <div class="instruction-overlay">
+      <h2>Merry Christmas!</h2>
+      <p>拖动鼠标旋转视角 | 欣赏绽放的烟花与飘雪</p>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("tree-container");
+      const ctx = canvas.getContext("2d");
+
+      let width, height;
+      let particles = [];
+      let fireworks = []; // Fireworks Array
+
+      // 3D Variables
+      let angleY = 0;
+      let angleX = -0.2; // Slight tilt
+      let targetAngleY = 0;
+      let targetAngleX = -0.2;
+      let dragging = false;
+      let lastMouseX = 0;
+      let lastMouseY = 0;
+
+      // Resize
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      // Helper: 3D Projection
+      function project(x, y, z, angleY, angleX, centerX, centerY) {
+        // Rotate Y
+        const x1 = x * Math.cos(angleY) - z * Math.sin(angleY);
+        const z1 = z * Math.cos(angleY) + x * Math.sin(angleY);
+
+        // Rotate X
+        const y1 = y * Math.cos(angleX) - z1 * Math.sin(angleX);
+        const z2 = z1 * Math.cos(angleX) + y * Math.sin(angleX);
+
+        const fov = 300;
+        const scale = fov / (fov + z2);
+
+        return {
+          x: x1 * scale + centerX,
+          y: y1 * scale + centerY,
+          scale: scale,
+          z: z2, // for sorting if needed
+        };
+      }
+
+      // Particle Class (Tree & Snow)
+      class Particle {
+        constructor(type = "tree") {
+          this.type = type;
+          this.reset();
+        }
+
+        reset() {
+          if (this.type === "tree") {
+            // TREE LEAVES
+            this.y = Math.random() * 400 - 200;
+            const maxRadius = ((this.y + 200) / 400) * 180 + 10;
+            const theta = Math.random() * Math.PI * 2;
+            const spiral = this.y * 0.1;
+
+            this.x = Math.cos(theta + spiral) * maxRadius * Math.random();
+            this.z = Math.sin(theta + spiral) * maxRadius * Math.random();
+
+            this.hue = Math.random() > 0.8 ? 50 : 120 + Math.random() * 40;
+            this.lightness = 50 + Math.random() * 30;
+            this.size = Math.random() * 2 + 1;
+            this.alpha = Math.random() * 0.5 + 0.5;
+            this.speedY = 0;
+          } else if (this.type === "trunk") {
+            // TREE TRUNK
+            this.y = Math.random() * 100 + 200;
+            const radius = Math.random() * 25;
+            const theta = Math.random() * Math.PI * 2;
+            this.x = Math.cos(theta) * radius;
+            this.z = Math.sin(theta) * radius;
+            this.hue = 30; // Brown
+            this.lightness = 30 + Math.random() * 20;
+            this.size = Math.random() * 2 + 1;
+            this.alpha = 0.8;
+            this.speedY = 0;
+          } else if (this.type === "snow") {
+            // FALLING SNOW
+            this.x = Math.random() * width - width / 2;
+            this.y = Math.random() * height - height / 2;
+            this.z = Math.random() * 800 - 400;
+            this.hue = 200;
+            this.lightness = 100;
+            this.size = Math.random() * 3 + 2;
+            this.alpha = Math.random() * 0.5 + 0.5;
+            this.speedY = Math.random() * 1.5 + 0.5;
+          }
+          this.sparkleSpeed = Math.random() * 0.05 + 0.01;
+        }
+
+        update() {
+          if (this.type === "snow") {
+            this.y += this.speedY; // Fall down
+            if (this.y > 400) {
+              this.y = -400;
+            }
+          } else {
+            this.alpha += this.sparkleSpeed;
+            if (this.alpha > 1 || this.alpha < 0) this.sparkleSpeed *= -1;
+          }
+        }
+
+        draw(ctx, centerX, centerY, angleY, angleX) {
+          const p = project(
+            this.x,
+            this.y,
+            this.z,
+            angleY,
+            angleX,
+            centerX,
+            centerY
+          );
+          if (p.scale > 0) {
+            ctx.fillStyle = `hsla(${this.hue}, 100%, ${this.lightness}%, ${this.alpha})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, this.size * p.scale, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      // Firework Class
+      class Firework {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          // Spawn in the background "Skybox" area
+          // WE WANT TWO SIDES: Avoid the center (-300 to 300) so tree is clear
+          const side = Math.random() > 0.5 ? 1 : -1;
+          // Spawn range: +/- [400, 900]
+          this.x = side * (400 + Math.random() * 500);
+
+          // Z is always positive (far away into the screen)
+          this.z = 600 + Math.random() * 500;
+
+          this.y = 800; // Start far below
+          this.targetY = -300 - Math.random() * 400; // Explode higher relative to tree
+
+          this.speed = 8 + Math.random() * 4;
+
+          // Warm Colors: Red (0) to Yellow (60)
+          this.hue = Math.random() * 50;
+
+          this.state = "rising";
+          this.particles = [];
+          this.isDead = false;
+        }
+
+        update() {
+          if (this.state === "rising") {
+            this.y -= this.speed;
+            this.speed *= 0.99;
+
+            if (this.y < this.targetY || this.speed < 1) {
+              this.explode();
+            }
+          } else {
+            // Exploded
+            let aliveCount = 0;
+            for (let i = 0; i < this.particles.length; i++) {
+              const p = this.particles[i];
+              if (p.alpha > 0) {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.z += p.vz;
+                p.vy += 0.05; // Lower gravity
+                p.alpha -= 0.008; // Long life
+                aliveCount++;
+              }
+            }
+            if (aliveCount === 0) {
+              this.isDead = true;
+            }
+          }
+        }
+
+        explode() {
+          this.state = "exploded";
+          const count = 120; // More particles
+          for (let i = 0; i < count; i++) {
+            const speed = Math.random() * 6 + 2;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+
+            this.particles.push({
+              x: this.x,
+              y: this.y,
+              z: this.z,
+              vx: speed * Math.sin(phi) * Math.cos(theta),
+              vy: speed * Math.sin(phi) * Math.sin(theta),
+              vz: speed * Math.cos(phi),
+              alpha: 1,
+              hue: this.hue + Math.random() * 20 - 10,
+              // Larger particles: Random 3px to 5px (fluffy)
+              size: Math.random() * 2 + 3,
+            });
+          }
+        }
+
+        // Special Draw: Ignores AngleY (World Spin) to stay in background background
+        draw(ctx, centerX, centerY, angleX) {
+          // Lock AngleY to 0 so it doesn't spin around the tree
+          // But keep AngleX so it tilts with the camera
+          const fixedAngleY = 0;
+
+          if (this.state === "rising") {
+            const p = project(
+              this.x,
+              this.y,
+              this.z,
+              fixedAngleY,
+              angleX,
+              centerX,
+              centerY
+            );
+            if (p.scale > 0) {
+              ctx.fillStyle = `hsl(${this.hue}, 100%, 70%)`;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, 5 * p.scale, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          } else {
+            this.particles.forEach((p) => {
+              if (p.alpha > 0) {
+                const pos = project(
+                  p.x,
+                  p.y,
+                  p.z,
+                  fixedAngleY,
+                  angleX,
+                  centerX,
+                  centerY
+                );
+                if (pos.scale > 0) {
+                  ctx.fillStyle = `hsla(${p.hue}, 100%, 60%, ${p.alpha})`;
+                  ctx.beginPath();
+                  ctx.arc(pos.x, pos.y, p.size * pos.scale, 0, Math.PI * 2);
+                  ctx.fill();
+                }
+              }
+            });
+          }
+        }
+      }
+
+      // Initialize Particles
+      // Leaves
+      for (let i = 0; i < 1500; i++) {
+        particles.push(new Particle("tree"));
+      }
+      // Trunk
+      for (let i = 0; i < 400; i++) {
+        particles.push(new Particle("trunk"));
+      }
+      // Snow
+      for (let i = 0; i < 500; i++) {
+        particles.push(new Particle("snow"));
+      }
+
+      // Star on Top
+      const star = { x: 0, y: -210, z: 0, hue: 60 };
+
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Interaction Rotation
+        angleY += (targetAngleY - angleY) * 0.1;
+        angleX += (targetAngleX - angleX) * 0.1;
+
+        if (!dragging) {
+          targetAngleY += 0.005;
+        }
+
+        // Lower Frequency: approx 1 every 2.5 seconds (at 60fps)
+        if (Math.random() < 0.007) {
+          fireworks.push(new Firework());
+        }
+
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        // 1. Draw Fireworks FIRST (Background Layer)
+        // They ignore angleY logic inside their draw method
+        for (let i = fireworks.length - 1; i >= 0; i--) {
+          const fw = fireworks[i];
+          fw.update();
+          fw.draw(ctx, centerX, centerY, angleX); // Note: Passing angleX only effectively
+          if (fw.isDead) {
+            fireworks.splice(i, 1);
+          }
+        }
+
+        // 2. Draw Tree & Snow (Foreground Layer)
+        // Standard depth sort often helps tree look correct
+        particles.sort((a, b) => {
+          // Rough depth projection for sorting
+          // We care about Transformed Z.
+          // To save CPU, we use pre-calced rough depths or just y/z approximation
+          // For a dense particle cloud, simple painter's algo without sort (since we draw fireworks first) is usually tolerable
+          // But let's try a quick sort if performance allows
+          // (Omitted strict sort for perf, relying on 'fireworks first' for big layer separation)
+          return 0;
+        });
+
+        particles.forEach((p) => {
+          p.update();
+          p.draw(ctx, centerX, centerY, angleY, angleX);
+        });
+
+        // Draw Star
+        const starPos = project(
+          star.x,
+          star.y,
+          star.z,
+          angleY,
+          angleX,
+          centerX,
+          centerY
+        );
+        if (starPos.scale > 0) {
+          ctx.fillStyle = `gold`;
+          ctx.beginPath();
+          ctx.arc(starPos.x, starPos.y, 10 * starPos.scale, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 20;
+          ctx.shadowColor = "gold";
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      // Mouse Interactions
+      canvas.addEventListener("mousedown", (e) => {
+        dragging = true;
+      });
+
+      window.addEventListener("mouseup", () => {
+        dragging = false;
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (dragging) {
+          const deltaX = e.clientX - lastMouseX;
+          const deltaY = e.clientY - lastMouseY;
+
+          targetAngleY += deltaX * 0.01;
+          targetAngleX += deltaY * 0.01;
+
+          // CLAMP AngleX to prevent inversion
+          // Range -1.5 (looking down from top-ish) to 1.5 (looking up from bottom)
+          // Actually, PI/2 is 1.57. So 1.4 is safe.
+          const limit = 1.4;
+          if (targetAngleX > limit) targetAngleX = limit;
+          if (targetAngleX < -limit) targetAngleX = -limit;
+
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+        }
+      });
+
+      draw();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的博客 - 首页</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Header / Navigation -->
+    <header>
+      <div class="logo">MySpace</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">首页</a></li>
+          <li><a href="blog.html">我的文章</a></li>
+          <li><a href="gallery.html">圣诞特辑</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)"
+              >关于站长 <span class="arrow"></span
+            ></a>
+            <ul class="dropdown-content">
+              <li><a href="about.html">个人简介</a></li>
+              <li><a href="contact.html">联系我</a></li>
+              <li><a href="game.html">找我开黑</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Hero / Carousel Section -->
+    <section class="carousel-container">
+      <!-- Slide 1 -->
+      <div
+        class="slide active"
+        style="
+          background-image: url('img/slide1.jpg');
+          background-size: cover;
+          background-position: center;
+        "
+      >
+        <div class="slide-content">
+          <h1>欢迎来到我的个人博客</h1>
+          <p>探索技术与设计的无限可能</p>
+        </div>
+      </div>
+      <!-- Slide 2 -->
+      <div
+        class="slide"
+        style="
+          background-image: url('img/slide2.jpg');
+          background-size: cover;
+          background-position: center;
+        "
+      >
+        <div class="slide-content">
+          <h1>记录生活点滴</h1>
+        </div>
+      </div>
+      <!-- Slide 3 -->
+      <div
+        class="slide"
+        style="
+          background-image: url('img/slide3.jpg');
+          background-size: cover;
+          background-position: center;
+        "
+      >
+        <div class="slide-content">
+          <h1>分享学习心得</h1>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <button class="carousel-btn prev" onclick="moveSlide(-1)">
+        &#10094;
+      </button>
+      <button class="carousel-btn next" onclick="moveSlide(1)">&#10095;</button>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+      <h2 class="section-title">最新动态</h2>
+      <div
+        style="
+          display: flex;
+          gap: 20px;
+          flex-wrap: wrap;
+          justify-content: center;
+        "
+      >
+        <!-- Simple cards to fill space -->
+        <div
+          style="
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex: 1 1 300px;
+          "
+        >
+          <h3>圣诞节快乐</h3>
+          <p>
+            圣诞节快到了，我在网站中加入了许多圣诞元素，在此祝大家圣诞节快乐！
+          </p>
+        </div>
+        <div
+          style="
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex: 1 1 300px;
+          "
+        >
+          <h3>关于设计理念</h3>
+          <p>在极简主义中探索视觉平衡，打造优雅的界面设计。</p>
+        </div>
+        <div
+          style="
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex: 1 1 300px;
+          "
+        >
+          <h3>未来计划</h3>
+          <p>计划添加更多的交互功能，比如暗黑模式切换和更复杂的表单验证。</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <p>Designed by <span class="footer-highlight">蒋智宇</span></p>
+        <p>
+          学号: <span class="footer-highlight">2301120060</span> | 班级:
+          <span class="footer-highlight">软件工程B231</span>
+        </p>
+        <p>联系方式: 2193887863@qq.com</p>
+        <p id="current-time">加载时间中...</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

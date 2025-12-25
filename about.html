@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>关于站长 - 个人博客</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">MySpace</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="blog.html">我的文章</a></li>
+          <li><a href="gallery.html">圣诞特辑</a></li>
+          <li class="dropdown">
+            <!-- Removed text arrow, CSS adds one now -->
+            <a href="javascript:void(0)" class="active"
+              >关于站长 <span class="arrow"></span
+            ></a>
+            <ul class="dropdown-content">
+              <!-- Added About Me here too so it's "enclosed" -->
+              <li><a href="about.html">个人简介</a></li>
+              <li><a href="contact.html">联系我</a></li>
+              <li><a href="game.html">找我开黑</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="profile-card">
+        <!-- Positioning: Absolute centered -->
+        <div
+          class="profile-img"
+          style="
+            background: url('img/new-avatar.jpg') center center no-repeat;
+            background-size: cover;
+            background-color: #3c40c6;
+          "
+        ></div>
+
+        <h2 style="margin-top: 50px">关于站长</h2>
+        <p style="color: #666; max-width: 600px; margin: 10px auto">
+          我算是一名热衷于“折腾”的技术宅。在这里，我分享关于效率提升、数码玩法以及那些让我眼前一亮的黑科技。
+        </p>
+
+        <div style="margin-top: 2rem; display: inline-flex; gap: 1rem">
+          <a
+            href="https://github.com/SpaceFish233"
+            target="_blank"
+            style="
+              padding: 10px 20px;
+              background: #333;
+              color: white;
+              border-radius: 5px;
+            "
+            >GitHub 主页</a
+          >
+        </div>
+
+        <div style="text-align: left; max-width: 600px; margin: 3rem auto 0">
+          <h3>技能掌握 (Ordered List)(吹牛的)</h3>
+          <div class="skill-list">
+            <ol>
+              <li>
+                <strong>HTML5 & CSS3</strong>
+                <div
+                  style="
+                    background: #eee;
+                    height: 10px;
+                    border-radius: 5px;
+                    margin-top: 5px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    style="
+                      width: 90%;
+                      background: var(--primary-color);
+                      height: 100%;
+                    "
+                  ></div>
+                </div>
+              </li>
+              <li>
+                <strong>C/C++</strong>
+                <div
+                  style="
+                    background: #eee;
+                    height: 10px;
+                    border-radius: 5px;
+                    margin-top: 5px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    style="
+                      width: 75%;
+                      background: var(--secondary-color);
+                      height: 100%;
+                    "
+                  ></div>
+                </div>
+              </li>
+              <li>
+                <strong>java</strong>
+                <div
+                  style="
+                    background: #eee;
+                    height: 10px;
+                    border-radius: 5px;
+                    margin-top: 5px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    style="
+                      width: 85%;
+                      background: var(--accent-color);
+                      height: 100%;
+                    "
+                  ></div>
+                </div>
+              </li>
+              <li>
+                <strong>python</strong>
+                <div
+                  style="
+                    background: #eee;
+                    height: 10px;
+                    border-radius: 5px;
+                    margin-top: 5px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    style="width: 60%; background: #fab1a0; height: 100%"
+                  ></div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <p>Designed by <span class="footer-highlight">蒋智宇</span></p>
+        <p>
+          学号: <span class="footer-highlight">2301120060</span> | 班级:
+          <span class="footer-highlight">软件工程B231</span>
+        </p>
+        <p>联系方式: 2193887863@qq.com</p>
+        <p id="current-time">加载时间中...</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

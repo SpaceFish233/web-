@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>找我开黑 - 个人博客</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .game-card {
+        background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        transition: transform 0.3s;
+      }
+      .game-card:hover {
+        transform: translateY(-5px);
+      }
+      .game-icon {
+        font-size: 3rem;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 1rem;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">MySpace</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="blog.html">我的文章</a></li>
+          <li><a href="gallery.html">圣诞特辑</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="active"
+              >关于站长 <span class="arrow"></span
+            ></a>
+            <ul class="dropdown-content">
+              <li><a href="about.html">个人简介</a></li>
+              <li><a href="contact.html">联系我</a></li>
+              <li><a href="game.html" class="active">找我开黑</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h2 class="section-title">来把紧张刺激的游戏？</h2>
+      <p style="text-align: center; margin-bottom: 2rem">
+        学习工作之余，我也热爱电子游戏。如果你也玩这些游戏，欢迎加好友一起开黑！(带我上分)
+      </p>
+
+      <div class="game-card">
+        <div class="game-icon">🛡️</div>
+        <div>
+          <h3>Overwatch (守望先锋)</h3>
+          <p>大区：国服 带我打排位😭</p>
+          <p class="footer-highlight">ID: 何春秋 #5430</p>
+        </div>
+      </div>
+
+      <div
+        class="game-card"
+        style="background: linear-gradient(135deg, #00cec9, #81ecec)"
+      >
+        <div class="game-icon">🃏</div>
+        <div>
+          <h3>Hearthstone (炉石传说)</h3>
+          <p>模式：酒馆战棋 带我打酒馆😭</p>
+          <p class="footer-highlight">ID: 何春秋 #5430</p>
+        </div>
+      </div>
+
+      <div
+        class="game-card"
+        style="background: linear-gradient(135deg, #e17055, #fab1a0)"
+      >
+        <div class="game-icon">⛏️</div>
+        <div>
+          <h3>Minecraft (我的世界)</h3>
+          <p>版本：Java版 1.21.1 | 玩法：科技整合包</p>
+          <p>“服务器已为你开好！”</p>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <p>Designed by <span class="footer-highlight">蒋智宇</span></p>
+        <p>
+          学号: <span class="footer-highlight">2301120060</span> | 班级:
+          <span class="footer-highlight">软件工程B231</span>
+        </p>
+        <p>联系方式: 2193887863@qq.com</p>
+        <p id="current-time">加载时间中...</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

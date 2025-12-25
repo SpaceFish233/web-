@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      告别笔记焦虑：我用Obsidian + GitHub + AI 打造的“永久”知识库 - 个人博客
+    </title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .article-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: white;
+        padding: 3rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+      .article-header {
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+      }
+      .article-title {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+      .article-meta {
+        color: #888;
+        font-size: 0.9rem;
+      }
+      .article-content {
+        line-height: 1.8;
+        color: #444;
+      }
+      .article-content h2 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+        font-size: 1.5rem;
+      }
+      .article-content h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.8rem;
+        font-size: 1.2rem;
+        color: #555;
+      }
+      .article-content p {
+        margin-bottom: 1rem;
+      }
+      .article-content ul,
+      .article-content ol {
+        margin-bottom: 1rem;
+        padding-left: 20px;
+      }
+      .article-content li {
+        margin-bottom: 0.5rem;
+      }
+      .article-content strong {
+        color: #333;
+      }
+      .article-content a {
+        color: var(--primary-color);
+        text-decoration: underline;
+      }
+      .back-btn {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .warning-box {
+        background: #e3f2fd;
+        border-left: 5px solid #2196f3;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+        color: #0d47a1;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">MySpace</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="blog.html" class="active">我的文章</a></li>
+          <li><a href="gallery.html">圣诞特辑</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)"
+              >关于站长 <span class="arrow"></span
+            ></a>
+            <ul class="dropdown-content">
+              <li><a href="about.html">个人简介</a></li>
+              <li><a href="contact.html">联系我</a></li>
+              <li><a href="game.html">找我开黑</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <a href="blog.html" class="back-btn">&larr; 返回文章列表</a>
+
+      <article class="article-container">
+        <header class="article-header">
+          <h1 class="article-title">
+            告别笔记焦虑：我用Obsidian + GitHub + AI 打造的“永久”知识库
+          </h1>
+          <div class="article-meta">
+            <div>发布于 2025-12-21</div>
+            <div>分类: 效率工具</div>
+          </div>
+        </header>
+
+        <div class="article-content">
+          <p>
+            我用过无数款笔记工具，语雀，OneNote， Notion……，最终我选择了
+            <strong>Obsidian</strong>。
+          </p>
+          <p>为什么选择<strong>Obsidian</strong>？归根结底是因为“安全感”。</p>
+          <p>
+            Obsidian 里所有的笔记，本质上都是躺在你本地硬盘里的一个个 Markdown
+            (<code>.md</code>)
+            文件。哪怕有一天开发商跑路了，你的数据依然完好无损，换个编辑器就能接着用。这种把知识紧紧攥在自己手里的感觉，是任何云端软件都给不了的。
+          </p>
+          <p>
+            最近，我参考了一套被称为“邪修”的 Obsidian
+            进阶用法，彻底解决了<strong>云同步收费</strong>、<strong
+              >AI 集成生硬</strong
+            >以及<strong>图片管理混乱</strong>这三大痛点。今天就把这套完全免费、高度自动化的方案分享给大家。
+          </p>
+
+          <h2>一、 拒绝订阅制：用GitHub 实现终身免费的“无限”云同步</h2>
+          <p>
+            Obsidian
+            官方的同步服务虽然好用，但每月的订阅费对很多人来说也是一笔开销。其实，对于我们这种把笔记存在本地的用户来说，<strong
+              >GitHub</strong
+            >
+            就是最完美的云端保险箱。
+          </p>
+          <strong>我的方案核心：</strong>
+          <ol>
+            <li>
+              <strong>Git 版本控制</strong>：不仅是备份，Git
+              记录了你每一次的修改历史。误删了某段话？直接回滚到昨天的版本，这种“后悔药”是普通网盘做不到的。
+            </li>
+            <li>
+              <strong>Obsidian Git 插件</strong
+              >：你不需要懂复杂的命令行。安装这个插件后，设置好
+              <code>Auto commit</code
+              >（比如停止编辑1分钟后自动提交），一切都在后台静默完成。你在电脑上写完，它自动推送到
+              GitHub 私有仓库，完全无感。
+            </li>
+          </ol>
+          <p>
+            这套方案不仅省下了每年的同步费，更重要的是，GitHub
+            作为计算机基础设施级别的平台，其稳定性远超一般的创业公司网盘。
+          </p>
+
+          <h2>二、 AI 不止是陪聊：让Gemini 直接“接管”你的本地文件</h2>
+          <p>
+            很多笔记软件的 AI
+            功能只是在侧边栏挂一个对话框，和你当前的笔记内容是割裂的。但在
+            Obsidian 的这套玩法里，AI 是真正融入文件系统的。
+          </p>
+          <p>
+            我使用了 Google 的 <strong>Gemini CLI</strong> 工具（配合
+            Node.js），它最大的优势是<strong>能直接读取和操作本地文件</strong>。
+          </p>
+          <strong>我是怎么用的？</strong>
+          <ul>
+            <li>
+              <strong>模仿文风写作</strong>：我让 AI
+              读取我过去三年的所有文章脚本，分析我的语气、用词习惯。然后，我只需给它一个新主题，它就能生成一份带有我强烈个人风格的初稿。
+            </li>
+            <li>
+              <strong>批量整理</strong>：面对一堆杂乱的选题，我让 AI
+              自动创建文件夹、分类归档，甚至帮我把旧笔记里的灵感提取出来，生成新的选题大纲。
+            </li>
+          </ul>
+          <p>
+            这种直接对本地 <code>.md</code> 文件进行批量“手术”的能力，才是 AI
+            笔记的终极形态。
+          </p>
+
+          <h2>三、 细节控的强迫症解药：图片与多端同步</h2>
+          <p>
+            用 Markdown
+            写笔记，最头疼的就是图片。以前直接粘贴，图片会乱飞，或者链接格式不标准，导致在别的地方打不开。
+          </p>
+          <strong>我的解决方案：</strong>
+          <ul>
+            <li>
+              <strong>Custom Attachment Location 插件</strong
+              >：强制把粘贴的图片自动存入当前笔记同级的<code>assets</code>文件夹。
+            </li>
+            <li>
+              <strong>标准化路径</strong>：配置插件将图片链接转换为标准的
+              Markdown 语法。这样，我的笔记推送到 GitHub
+              后，直接在网页端打开也能完美显示图片，甚至用 VS Code
+              打开也能正常预览。
+            </li>
+          </ul>
+
+          <div class="warning-box">
+            <strong>📱 手机端怎么办？</strong>
+            即使是安卓手机，配合 GitHub
+            也能实现同步。将电脑端的笔记库复制到手机，配置好 Git 和
+            Token，出门在外产生的灵感，写完自动推送到云端，回到家电脑上一拉取，无缝衔接。
+          </div>
+
+          <h2>写在最后</h2>
+          <p>
+            这套方案被戏称为“邪修”，因为它确实有一点门槛（比如需要注册
+            GitHub、安装 Node.js）。但一旦配置完成，你将获得一个：
+          </p>
+          <ul>
+            <li><strong>完全免费</strong></li>
+            <li><strong>数据绝对私有</strong></li>
+            <li><strong>拥有AI 生产力</strong></li>
+            <li><strong>全平台同步</strong></li>
+          </ul>
+          <p>
+            的终极知识库。在这个数据并不总是属于你的时代，愿我们都能构建属于自己的、永不丢失的数字花园。
+          </p>
+        </div>
+      </article>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <p>Designed by <span class="footer-highlight">蒋智宇</span></p>
+        <p>
+          学号: <span class="footer-highlight">2301120060</span> | 班级:
+          <span class="footer-highlight">软件工程B231</span>
+        </p>
+        <p>联系方式: 2193887863@qq.com</p>
+        <p id="current-time">加载时间中...</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+      // Manually handle the arrow logic if needed
+    </script>
+  </body>
+</html>

@@ -1,0 +1,679 @@
+/* Global Styles & Reset */
+:root {
+  --primary-color: #0fbcf9; /* Vibrant Blue */
+  --secondary-color: #3c40c6; /* Deep Blue */
+  --accent-color: #ff5e57; /* Salmon Red */
+  --text-dark: #2d3436;
+  --text-light: #636e72;
+  --white: #ffffff;
+  --light-bg: #f5f6fa;
+  --footer-bg: #1e272e;
+  --font-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --transition-speed: 0.3s;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  line-height: 1.6;
+  color: var(--text-dark);
+  background-color: var(--light-bg);
+}
+
+/* Mascot Widget Animation */
+.mascot-widget {
+  position: fixed;
+  right: 5%; /* Right side whitespace */
+  top: 50%; /* Vertically centered */
+  transform: translateY(-50%);
+  width: 150px; /* Adjust size as needed */
+  z-index: 100; /* Above content */
+  opacity: 0.9;
+
+  /* "Background color consistent" - multiply blends white bg into page bg */
+  mix-blend-mode: multiply;
+
+  /* "Left-Right High Speed Rotation" -> Y-Axis 3D Spin */
+  animation: fast-spin-y 2s linear infinite;
+}
+
+/* Christmas Artistic Text */
+/* Christmas Artistic Text */
+.christmas-text {
+  position: fixed;
+  top: 110px;
+  left: 40px;
+  z-index: 2000;
+  /* Fancy but readable wide font for the pattern */
+  font-family: "Segoe UI Black", "Arial Black", "Impact", sans-serif;
+  font-size: 3.5rem; /* Larger */
+  font-weight: 900;
+
+  /* Candy Cane Pattern (Red & White Stripes) */
+  background: repeating-linear-gradient(
+    45deg,
+    #e74c3c,
+    #e74c3c 20px,
+    #ffffff 20px,
+    #ffffff 40px
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent; /* Hide actual text color */
+
+  /* Drop shadow for legibility */
+  filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.2));
+
+  transform: rotate(-10deg);
+  cursor: pointer;
+  text-decoration: none;
+
+  /* Breathing Animation */
+  animation: breathe 2s ease-in-out infinite alternate;
+}
+
+/* Snowflake Decoration */
+.christmas-text::after {
+  content: "❄️";
+  position: absolute;
+  top: -20px;
+  right: -25px;
+  font-size: 3rem;
+  filter: none;
+  -webkit-text-fill-color: initial;
+  background: none;
+  animation: spin-snow 3s linear infinite;
+}
+
+@keyframes spin-snow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Breathing Animation */
+@keyframes breathe {
+  0% {
+    transform: rotate(-10deg) scale(1);
+  }
+  100% {
+    transform: rotate(-10deg) scale(1.15);
+  }
+}
+
+/* 3D Y-Axis Rotation Keyframes */
+@keyframes fast-spin-y {
+  0% {
+    transform: translateY(-50%) rotateY(0deg);
+  }
+  100% {
+    transform: translateY(-50%) rotateY(360deg);
+  }
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition-speed);
+}
+
+ul,
+ol {
+  list-style: none; /* Default reset, will add back for specific sections if needed */
+}
+
+/* Header & Navigation (Fixed/Sticky Positioning) */
+header {
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky; /* Position: Sticky demonstration */
+  top: 0;
+  z-index: 1000;
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(10px); /* Glassmorphism */
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links li a {
+  font-weight: 500;
+  position: relative;
+}
+
+/* Nav Hover Animation (Transition) */
+.nav-links li a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: var(--primary-color);
+  transition: width var(--transition-speed) ease;
+}
+
+.nav-links li a:hover::after {
+  width: 100%;
+}
+
+.nav-links li a.active {
+  color: var(--primary-color);
+}
+
+/* --- Dropdown Menu Styles --- */
+.dropdown {
+  position: relative;
+}
+
+/* Dropdown Arrow (CSS Chevron) */
+.dropdown > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Standard gap */
+}
+
+/* Dropdown Arrow (Span) */
+.dropdown > a .arrow {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+
+  /* Default: Downward Chevron (v) */
+  transform: rotate(45deg);
+
+  transition: transform 0.3s ease;
+  margin-top: -4px;
+}
+
+/* Hover State: Rotate 90deg Clockwise -> Left (<) */
+.dropdown:hover > a .arrow {
+  transform: rotate(135deg);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff; /* Explicit White Background */
+  min-width: 160px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  z-index: 1000;
+  padding: 0.5rem 0;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Show on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content li {
+  padding: 0;
+  display: block;
+  text-align: left;
+}
+
+/* FORCE Dark Text for Dropdown Items */
+/* This specific selector overrides general header link styles */
+ul.nav-links li.dropdown .dropdown-content li a {
+  color: #333333 !important; /* Always dark gray */
+  padding: 10px 20px;
+  display: block;
+  font-size: 0.9rem;
+  text-decoration: none;
+  background: transparent; /* Reset any potential bg inheritances */
+}
+
+ul.nav-links li.dropdown .dropdown-content li a:hover {
+  background-color: #f1f1f1;
+  color: var(--primary-color) !important;
+}
+
+/* Disable the underline animation for dropdown items because it looks messy in a list */
+ul.nav-links li.dropdown .dropdown-content li a::after {
+  display: none;
+}
+
+/* Dropdown Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero Carousel (Slider) */
+.carousel-container {
+  position: relative; /* Position: Relative for absolute children */
+  width: 100%;
+  height: 45vh; /* Viewport Height */
+  overflow: hidden;
+  background: #000;
+}
+
+.slide {
+  position: absolute; /* Position: Absolute */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out; /* Transition */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide-content {
+  text-align: center;
+  color: var(--white);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  border-radius: 10px;
+  animation: slideUp 1s ease forwards; /* Animation usage */
+}
+
+/* Keyframe Animation */
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  color: white;
+  padding: 1rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: background 0.3s;
+}
+
+.carousel-btn:hover {
+  background: var(--primary-color);
+}
+
+.prev {
+  left: 1rem;
+}
+.next {
+  right: 1rem;
+}
+
+/* Main Content Container */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+  min-height: 60vh; /* Ensure footer stays down */
+}
+
+/* Sections */
+.section-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: var(--secondary-color);
+}
+
+/* Footer (Required Info) */
+footer {
+  background-color: var(--footer-bg);
+  color: var(--white);
+  padding: 2rem 5%;
+  text-align: center;
+  margin-top: auto;
+}
+
+.footer-content p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #b2bec3;
+}
+
+.footer-highlight {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* Utility: Clearfix for Floats (will be used in blog page) */
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none; /* Simple hide for now, usually needs distinct mobile menu */
+  }
+
+  .carousel-container {
+    height: 50vh;
+  }
+}
+
+/* -----------------------------------------------------------
+   PAGE SPECIFIC STYLES
+   ----------------------------------------------------------- */
+
+/* BLOG PAGE - Using FLOATS as requested */
+.blog-wrapper {
+  overflow: hidden; /* Clearfix parent */
+  padding: 2rem 0;
+}
+
+.blog-main {
+  width: 70%;
+  float: left;
+  padding-right: 20px;
+}
+
+.blog-sidebar {
+  width: 30%;
+  float: right;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.blog-post {
+  background: white;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s;
+}
+
+.blog-post:hover {
+  transform: translateY(-5px);
+}
+
+.blog-image {
+  width: 100%;
+  height: 200px;
+  background-color: #ddd; /* Skeleton placeholder */
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+/* GALLERY PAGE - Responsive Grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.gallery-item {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-item img {
+  /* Simulation since no real img */
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.1); /* Zoom Effect */
+}
+
+.gallery-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 10px;
+  transform: translateY(100%);
+  transition: transform 0.3s;
+}
+
+.gallery-item:hover .gallery-overlay {
+  transform: translateY(0);
+}
+
+/* ABOUT PAGE - Positioning & Lists */
+/* ABOUT PAGE - Positioning & Lists */
+.profile-card {
+  position: relative;
+  background: white;
+  margin-top: 160px; /* Increased space for Christmas Hat to clear nav bar */
+  padding: 3rem 2rem 2rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-img {
+  position: absolute; /* Absolute Positioning */
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--secondary-color);
+  border: 5px solid white;
+  /* overflow: hidden; Removed to allow Hat to stick out */
+  z-index: 10;
+}
+
+/* Christmas Hat Decoration (Image Based) - Moved to card to sit BEHIND avatar */
+.profile-card::before {
+  content: "";
+  position: absolute;
+  /* Positioning relative to card, matching previous offset relative to avatar */
+  top: -121px; /* -50px (avatar top) - 75px (hat offset) */
+  left: 50%;
+  margin-left: -21px; /* Shift left to match previous visual alignment */
+
+  width: 150px;
+  height: 120px;
+
+  background-image: url("img/christmas-hat.png");
+  background-size: contain;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+
+  z-index: 5; /* Lower than .profile-img (z-index: 10) so it sits behind */
+
+  transform: translateX(-50%) rotate(-10deg);
+  pointer-events: none;
+}
+
+/* Cleanup old hat selectors */
+.profile-img::before {
+  content: none;
+}
+
+.profile-img::after {
+  content: none;
+}
+
+.skill-list ol {
+  margin-left: 20px;
+  margin-top: 1rem;
+}
+
+.skill-list li {
+  margin-bottom: 0.5rem;
+  padding-left: 10px;
+}
+
+/* CONTACT PAGE - Form Styling */
+.contact-form {
+  background: white;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.btn-submit {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-submit:hover {
+  background: var(--secondary-color);
+}
+
+/* Global Snowfall Effect */
+.snowflake {
+  position: fixed;
+  top: -10px;
+  color: #a1c4fd; /* Light Blue for visibility on white bg */
+  font-size: 1rem;
+  user-select: none;
+  pointer-events: none; /* Let clicks pass through */
+  z-index: 9998; /* High, but typically below modal overlays or nav if needed */
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10px) translateX(0);
+  }
+  100% {
+    /* Fall down to screen bottom + some buffer */
+    transform: translateY(110vh) translateX(20px);
+  }
+}
+
+/* Social Media Contact Section */
+.social-contact-section {
+  margin-top: 2rem;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+.social-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.social-item {
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-item:hover {
+  transform: translateY(-5px);
+}
+
+.social-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.social-item p {
+  font-weight: bold;
+  color: var(--secondary-color);
+  margin: 0;
+}

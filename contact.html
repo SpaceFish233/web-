@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>联系我 - 个人博客</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">MySpace</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="blog.html">我的文章</a></li>
+          <li><a href="gallery.html">圣诞特辑</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="active"
+              >关于站长 <span class="arrow"></span
+            ></a>
+            <ul class="dropdown-content">
+              <li><a href="about.html">个人简介</a></li>
+              <li><a href="contact.html" class="active">联系我</a></li>
+              <li><a href="game.html">找我开黑</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h2 class="section-title">给我留言</h2>
+
+      <div class="contact-form">
+        <form
+          onsubmit="event.preventDefault(); alert('提交成功！\n(这是一个演示功能，实际数据未发送)');"
+        >
+          <div class="form-group">
+            <label for="name">您的姓名 (Name)</label>
+            <input
+              type="text"
+              id="name"
+              class="form-control"
+              placeholder="请输入姓名"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">联系邮箱 (Email)</label>
+            <input type="email" id="email" class="form-control" required />
+          </div>
+
+          <div class="form-group">
+            <label for="topic">留言主题 (Select Option)</label>
+            <select id="topic" class="form-control">
+              <option value="general">一般咨询</option>
+              <option value="tech">技术交流</option>
+              <option value="suggestion">网站建议</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">留言内容 (Message)</label>
+            <textarea
+              id="message"
+              rows="5"
+              class="form-control"
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">发送留言</button>
+        </form>
+      </div>
+
+      <div class="social-contact-section">
+        <h2 class="section-title">其他联系方式</h2>
+        <div class="social-grid">
+          <div class="social-item">
+            <img src="img/wechat-qr.jpg" alt="微信 (WeChat)" />
+            <p>微信 (WeChat)</p>
+          </div>
+          <div class="social-item">
+            <img src="img/douyin-qr.jpg" alt="抖音 (Douyin)" />
+            <p>抖音 (Douyin)</p>
+          </div>
+          <div class="social-item">
+            <img src="img/qq-qr.jpg" alt="QQ" />
+            <p>QQ: 2193887863</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <p>Designed by <span class="footer-highlight">蒋智宇</span></p>
+        <p>
+          学号: <span class="footer-highlight">2301120060</span> | 班级:
+          <span class="footer-highlight">软件工程B231</span>
+        </p>
+        <p>联系方式: 2193887863@qq.com</p>
+        <p id="current-time">加载时间中...</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
