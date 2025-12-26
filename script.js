@@ -62,39 +62,45 @@ setInterval(updateTime, 1000);
 // Add Global Decorations (Mascot + Christmas Text)
 // Add Global Decorations (Mascot + Christmas Text + Nav Update)
 function addDecorations() {
-  // 1. Mascot
-  const mascotImg = document.createElement("img");
-  mascotImg.src = "img/mascot.jpg";
-  mascotImg.alt = "Animation Mascot";
-  mascotImg.classList.add("mascot-widget");
-  document.body.appendChild(mascotImg);
+  // 1. Mascot - NOT on Danger Page
+  if (!window.location.pathname.endsWith("danger.html")) {
+    const mascotImg = document.createElement("img");
+    mascotImg.src = "img/mascot.jpg";
+    mascotImg.alt = "Animation Mascot";
+    mascotImg.classList.add("mascot-widget");
+    document.body.appendChild(mascotImg);
 
-  // Interaction: Spin faster on hover (Acceleration)
-  let spinInterval;
-  let currentDuration = 2.0; // Seconds (Initial Match with CSS)
+    // Interaction: Spin faster on hover (Acceleration)
+    let spinInterval;
+    let currentDuration = 2.0; // Seconds (Initial Match with CSS)
 
-  mascotImg.addEventListener("mouseenter", () => {
-    clearInterval(spinInterval);
-    spinInterval = setInterval(() => {
-      if (currentDuration > 0.1) {
-        currentDuration *= 0.9; // Accelerate
-        mascotImg.style.animationDuration = currentDuration + "s";
-      }
-    }, 50);
-  });
+    mascotImg.addEventListener("mouseenter", () => {
+      clearInterval(spinInterval);
+      spinInterval = setInterval(() => {
+        if (currentDuration > 0.1) {
+          currentDuration *= 0.9; // Accelerate
+          mascotImg.style.animationDuration = currentDuration + "s";
+        }
+      }, 50);
+    });
 
-  mascotImg.addEventListener("mouseleave", () => {
-    clearInterval(spinInterval);
-    currentDuration = 2.0; // Reset
-    mascotImg.style.animationDuration = "2s";
-  });
+    mascotImg.addEventListener("mouseleave", () => {
+      clearInterval(spinInterval);
+      currentDuration = 2.0; // Reset
+      mascotImg.style.animationDuration = "2s";
+    });
+  }
 
-  // 2. Christmas Text (Clickable Link)
-  const xmasLink = document.createElement("a");
-  xmasLink.href = "gallery.html"; // Jump to Christmas Special
-  xmasLink.textContent = "Merry Christmas";
-  xmasLink.classList.add("christmas-text");
-  document.body.appendChild(xmasLink);
+  // 2. Christmas Text (Clickable Link) - Only on Homepage
+  const path = window.location.pathname;
+  // Check if we are on index.html or root
+  if (path.endsWith("index.html") || path === "/" || path.endsWith("/")) {
+    const xmasLink = document.createElement("a");
+    xmasLink.href = "gallery.html"; // Jump to Christmas Special
+    xmasLink.textContent = "Merry Christmas";
+    xmasLink.classList.add("christmas-text");
+    document.body.appendChild(xmasLink);
+  }
 
   // 3. Update Navigation Text: "光影集" -> "圣诞特辑"
   // Find all nav links
@@ -105,8 +111,10 @@ function addDecorations() {
     }
   });
 
-  // 4. Global Snowfall Effect
-  setInterval(createSnowflake, 300); // Create a snowflake every 300ms
+  // 4. Global Snowfall Effect - NOT on Danger Page
+  if (!window.location.pathname.endsWith("danger.html")) {
+    setInterval(createSnowflake, 300); // Create a snowflake every 300ms
+  }
 }
 
 function createSnowflake() {

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>千万别点！ - 警告</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .danger-wrapper {
+        flex: 1; /* Grow to fill space */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: repeating-linear-gradient(
+          45deg,
+          #f1c40f,
+          #f1c40f 10px,
+          #2c3e50 10px,
+          #2c3e50 20px
+        );
+        padding: 2rem;
+      }
+      .danger-card {
+        background: #fff;
+        padding: 3rem;
+        border-radius: 10px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+        border: 5px solid #c0392b;
+      }
+      .danger-btn {
+        background: #c0392b;
+        color: white;
+        font-size: 1.5rem;
+        padding: 1rem 3rem;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: transform 0.1s;
+        box-shadow: 0 5px 15px rgba(192, 57, 43, 0.4);
+        animation: pulse 1s infinite;
+      }
+      .danger-btn:active {
+        transform: scale(0.95);
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7);
+        }
+        70% {
+          transform: scale(1.05);
+          box-shadow: 0 0 0 10px rgba(192, 57, 43, 0);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(192, 57, 43, 0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">MySpace</div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="danger.html" class="nav-danger">千万别点！</a></li>
+          <li><a href="index.html">首页</a></li>
+          <li><a href="blog.html">我的文章</a></li>
+          <li><a href="gallery.html">圣诞特辑</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)"
+              >关于站长 <span class="arrow"></span
+            ></a>
+            <ul class="dropdown-content">
+              <li><a href="about.html">个人简介</a></li>
+              <li><a href="contact.html">联系我</a></li>
+              <li><a href="game.html">找我开黑</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="danger-wrapper">
+      <div class="danger-card">
+        <h1 style="color: #c0392b; margin-bottom: 2rem">⚠ 高危操作区域 ⚠</h1>
+        <button id="trigger-btn" class="danger-btn">禁止触碰</button>
+      </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="danger-modal" class="modal-overlay">
+      <div class="modal-box">
+        <div id="modal-text" class="modal-message">
+          接下来会发生不可逆的后果，你确定要继续吗
+        </div>
+        <div id="modal-btns" class="modal-buttons">
+          <button class="btn-modal btn-cancel" onclick="closeModal()">
+            取消
+          </button>
+          <button class="btn-modal btn-continue" onclick="nextStep()">
+            继续
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <p>Designed by <span class="footer-highlight">蒋智宇</span></p>
+        <p>
+          学号: <span class="footer-highlight">2301120060</span> | 班级:
+          <span class="footer-highlight">软件工程B231</span>
+        </p>
+        <p>联系方式: 2193887863@qq.com</p>
+        <p id="current-time">加载时间中...</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+      // Page Specific Logic
+      let step = 0;
+      const modal = document.getElementById("danger-modal");
+      const modalText = document.getElementById("modal-text");
+      const modalBtns = document.getElementById("modal-btns");
+
+      // Trigger Button
+      document.getElementById("trigger-btn").addEventListener("click", () => {
+        step = 1;
+        modal.style.display = "flex";
+        // Reset to initial state just in case
+        updateModalState();
+      });
+
+      function closeModal() {
+        modal.style.display = "none";
+        step = 0; // Reset
+      }
+
+      function nextStep() {
+        if (step === 1) {
+          step = 2;
+          updateModalState();
+        } else if (step === 2) {
+          step = 3;
+          // Open URL
+          window.open(
+            "https://www.bilibili.com/video/BV1ad4y1V7wb/?spm_id_from=333.337.search-card.all.click&vd_source=d47a92cfc2ec2f55e0d8b3fb48a4d977",
+            "_blank"
+          );
+          updateModalState();
+        }
+      }
+
+      function updateModalState() {
+        if (step === 1) {
+          modalText.innerText = "接下来将会发生不可逆的后果，你确定要继续吗";
+          modalBtns.innerHTML = `
+            <button class="btn-modal btn-cancel" onclick="closeModal()">取消</button>
+            <button class="btn-modal btn-continue" onclick="nextStep()">继续</button>
+          `;
+          modalBtns.className = "modal-buttons";
+        } else if (step === 2) {
+          modalText.innerText = "对于接下来发生的事情站长不负任何责任";
+          modalBtns.innerHTML = `
+            <button class="btn-modal btn-cancel" onclick="closeModal()">取消</button>
+            <button class="btn-modal btn-continue" onclick="nextStep()">继续</button>
+          `;
+          modalBtns.className = "modal-buttons";
+        } else if (step === 3) {
+          modalText.innerText = "新年将至，祝大家在新的一年里一起发大财！";
+          modalBtns.innerHTML = `
+            <button class="btn-modal btn-close" onclick="closeModal()">关闭</button>
+          `;
+          modalBtns.className = "modal-buttons center";
+        }
+      }
+    </script>
+  </body>
+</html>

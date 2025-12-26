@@ -56,6 +56,7 @@
       <div class="logo">MySpace</div>
       <nav>
         <ul class="nav-links">
+          <li><a href="danger.html" class="nav-danger">千万别点！</a></li>
           <li><a href="index.html">首页</a></li>
           <li><a href="blog.html">我的文章</a></li>
           <li><a href="gallery.html" class="active">圣诞特辑</a></li>
@@ -78,6 +79,25 @@
     <div class="instruction-overlay">
       <h2>Merry Christmas!</h2>
       <p>拖动鼠标旋转视角 | 欣赏绽放的烟花与飘雪</p>
+      <p style="font-size: 0.9rem; margin-top: 5px; opacity: 0.8">
+        鼠标左右键切换灯带颜色 | 滚轮向上散开成星河，向下聚拢回圣诞树
+      </p>
+    </div>
+
+    <!-- Background Music -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 100">
+      <audio
+        controls
+        autoplay
+        loop
+        style="opacity: 0.9; height: 40px; width: 300px"
+      >
+        <source
+          src="music/Jingle Bells (Album Version) - Children's Christmas Favorites.mp3"
+          type="audio/mpeg"
+        />
+        您的浏览器不支持播放音乐。
+      </audio>
     </div>
 
     <script>
@@ -88,6 +108,11 @@
       let particles = [];
       let fireworks = []; // Fireworks Array
 
+      // Light Strip Global State
+      const lightColors = [0, 60, 240, 280, 330]; // Red, Yellow, Blue, Purple, Pink (Removed Green)
+      let currentLightColorIndex = 1; // Default Yellow/Warm
+      let lightParticlesCount = 0; // To track position along the spiral
+
       // 3D Variables
       let angleY = 0;
       let angleX = -0.2; // Slight tilt
@@ -96,6 +121,10 @@
       let dragging = false;
       let lastMouseX = 0;
       let lastMouseY = 0;
+
+      // Interaction State: Tree <-> Galaxy
+      let explosionFactor = 0; // 0 = Tree, 1 = Galaxy
+      let targetExplosionFactor = 0;
 
       // Resize
       function resize() {
@@ -126,68 +155,153 @@
         };
       }
 
-      // Particle Class (Tree & Snow)
+      // Particle Class (Tree, Snow, Trunk, Light)
       class Particle {
-        constructor(type = "tree") {
+        constructor(type = "tree", index = 0, total = 0) {
           this.type = type;
+          this.index = index; // Used for light strip positioning
+          this.total = total;
+
+          // Current Position (for animation)
+          this.x = 0;
+          this.y = 0;
+          this.z = 0;
+
+          // Target Tree Position
+          this.treeX = 0;
+          this.treeY = 0;
+          this.treeZ = 0;
+
+          // Target Galaxy Position
+          this.galaxyX = 0;
+          this.galaxyY = 0;
+          this.galaxyZ = 0;
+
           this.reset();
         }
 
         reset() {
+          /* --- 1. Define Tree Position --- */
           if (this.type === "tree") {
             // TREE LEAVES
-            this.y = Math.random() * 400 - 200;
-            const maxRadius = ((this.y + 200) / 400) * 180 + 10;
+            this.treeY = Math.random() * 400 - 200;
+            const maxRadius = ((this.treeY + 200) / 400) * 180 + 10;
             const theta = Math.random() * Math.PI * 2;
-            const spiral = this.y * 0.1;
+            const spiral = this.treeY * 0.1;
 
-            this.x = Math.cos(theta + spiral) * maxRadius * Math.random();
-            this.z = Math.sin(theta + spiral) * maxRadius * Math.random();
+            this.treeX = Math.cos(theta + spiral) * maxRadius * Math.random();
+            this.treeZ = Math.sin(theta + spiral) * maxRadius * Math.random();
 
-            this.hue = Math.random() > 0.8 ? 50 : 120 + Math.random() * 40;
+            // Reduced bells: changed from > 0.8 to > 0.95
+            this.hue = Math.random() > 0.95 ? 50 : 120 + Math.random() * 40;
             this.lightness = 50 + Math.random() * 30;
             this.size = Math.random() * 2 + 1;
             this.alpha = Math.random() * 0.5 + 0.5;
             this.speedY = 0;
           } else if (this.type === "trunk") {
             // TREE TRUNK
-            this.y = Math.random() * 100 + 200;
+            this.treeY = Math.random() * 100 + 200;
             const radius = Math.random() * 25;
             const theta = Math.random() * Math.PI * 2;
-            this.x = Math.cos(theta) * radius;
-            this.z = Math.sin(theta) * radius;
+            this.treeX = Math.cos(theta) * radius;
+            this.treeZ = Math.sin(theta) * radius;
             this.hue = 30; // Brown
             this.lightness = 30 + Math.random() * 20;
             this.size = Math.random() * 2 + 1;
             this.alpha = 0.8;
             this.speedY = 0;
           } else if (this.type === "snow") {
-            // FALLING SNOW
-            this.x = Math.random() * width - width / 2;
-            this.y = Math.random() * height - height / 2;
-            this.z = Math.random() * 800 - 400;
+            // FALLING SNOW (Dynamic, handled in update, but needs intial pos)
+            this.treeX = Math.random() * width - width / 2;
+            this.treeY = Math.random() * height - height / 2;
+            this.treeZ = Math.random() * 800 - 400;
             this.hue = 200;
             this.lightness = 100;
             this.size = Math.random() * 3 + 2;
             this.alpha = Math.random() * 0.5 + 0.5;
             this.speedY = Math.random() * 1.5 + 0.5;
+          } else if (this.type === "light") {
+            // LIGHT STRIP (Spiral)
+            // Normalized position t from 0 (bottom) to 1 (top)
+            // Actually y is -200 (top) to 200 (bottom).
+            // Let's wind from bottom (200) to top (-200).
+            const t = this.index / this.total;
+            this.treeY = 200 - t * 400; // 200 -> -200
+
+            // Radius decreases as we go up
+            const maxRadius = ((this.treeY + 200) / 400) * 180 + 10;
+            // Place lights INSIDE the surface foliage slightly (0.8 instead of 1.05)
+            // This makes it look like it's wrapped around the branches, not floating
+            const r = maxRadius * 0.9;
+
+            // Spiral Angle: 6 full rotations (6 * 2PI)
+            const theta = t * Math.PI * 2 * 6;
+
+            this.treeX = Math.cos(theta) * r;
+            this.treeZ = Math.sin(theta) * r;
+
+            this.lightness = 60;
+            this.size = 3.5; // Bigger than leaves
+            this.alpha = 1;
+            this.speedY = 0;
           }
+          /* --- 2. Define Galaxy Position (Spherical / Spiral Cloud) --- */
+          // Create a beautiful spherical distribution with some spiral arm tendency
+          const r = 400 + Math.random() * 400; // Large radius
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(2 * Math.random() - 1);
+
+          this.galaxyX = r * Math.sin(phi) * Math.cos(theta);
+          this.galaxyY = r * Math.sin(phi) * Math.sin(theta);
+          this.galaxyZ = r * Math.cos(phi);
+
+          // Initialize current position to tree
+          this.x = this.treeX;
+          this.y = this.treeY;
+          this.z = this.treeZ;
+
           this.sparkleSpeed = Math.random() * 0.05 + 0.01;
         }
 
         update() {
-          if (this.type === "snow") {
-            this.y += this.speedY; // Fall down
-            if (this.y > 400) {
-              this.y = -400;
+          // 1. Snow Physics (Only when close to Tree Mode)
+          if (this.type === "snow" && explosionFactor < 0.5) {
+            this.treeY += this.speedY; // Fall down logic applies to tree Coordinates
+            if (this.treeY > 400) {
+              this.treeY = -400;
             }
-          } else {
+          }
+
+          // 2. Sparkle
+          if (this.type !== "snow") {
             this.alpha += this.sparkleSpeed;
-            if (this.alpha > 1 || this.alpha < 0) this.sparkleSpeed *= -1;
+            if (this.alpha > 1 || this.alpha < 0.3) this.sparkleSpeed *= -1;
+          }
+
+          // 3. INTERPOLATION: Tree <-> Galaxy
+          // Ease the transition
+          // Position = TreePos * (1 - factor) + GalaxyPos * factor
+
+          // For snow, if we are in Galaxy mode, let it drift to galaxy position too?
+          // Or keep falling? Let's make EVERYTHING explode.
+
+          this.x =
+            this.treeX * (1 - explosionFactor) + this.galaxyX * explosionFactor;
+          this.y =
+            this.treeY * (1 - explosionFactor) + this.galaxyY * explosionFactor;
+          this.z =
+            this.treeZ * (1 - explosionFactor) + this.galaxyZ * explosionFactor;
+
+          // Fade out trunk in galaxy mode?
+          if (this.type === "trunk" && explosionFactor > 0.5) {
+            this.alpha *= 1 - explosionFactor;
           }
         }
 
         draw(ctx, centerX, centerY, angleY, angleX) {
+          // If fully invisible, skip
+          if (this.alpha <= 0.01) return;
+
           const p = project(
             this.x,
             this.y,
@@ -198,10 +312,24 @@
             centerY
           );
           if (p.scale > 0) {
-            ctx.fillStyle = `hsla(${this.hue}, 100%, ${this.lightness}%, ${this.alpha})`;
+            let color;
+            if (this.type === "light") {
+              const hue = lightColors[currentLightColorIndex];
+              // In Galaxy mode, maybe lights become random stars? Keep color for continuity
+              color = `hsla(${hue}, 100%, 60%, ${this.alpha})`;
+              // Add glow for lights
+              ctx.shadowBlur = 10;
+              ctx.shadowColor = `hsla(${hue}, 100%, 60%, 1)`;
+            } else {
+              color = `hsla(${this.hue}, 100%, ${this.lightness}%, ${this.alpha})`;
+              ctx.shadowBlur = 0;
+            }
+
+            ctx.fillStyle = color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, this.size * p.scale, 0, Math.PI * 2);
             ctx.fill();
+            ctx.shadowBlur = 0; // Reset
           }
         }
       }
@@ -345,6 +473,11 @@
       for (let i = 0; i < 500; i++) {
         particles.push(new Particle("snow"));
       }
+      // Lights
+      const totalLights = 100;
+      for (let i = 0; i < totalLights; i++) {
+        particles.push(new Particle("light", i, totalLights));
+      }
 
       // Star on Top
       const star = { x: 0, y: -210, z: 0, hue: 60 };
@@ -355,6 +488,9 @@
         // Interaction Rotation
         angleY += (targetAngleY - angleY) * 0.1;
         angleX += (targetAngleX - angleX) * 0.1;
+
+        // Explosion Interaction (Smooth Transition)
+        explosionFactor += (targetExplosionFactor - explosionFactor) * 0.05;
 
         if (!dragging) {
           targetAngleY += 0.005;
@@ -379,7 +515,7 @@
           }
         }
 
-        // 2. Draw Tree & Snow (Foreground Layer)
+        // 2. Draw Tree & Snow & Lights (Foreground Layer)
         // Standard depth sort often helps tree look correct
         particles.sort((a, b) => {
           // Rough depth projection for sorting
@@ -396,33 +532,73 @@
           p.draw(ctx, centerX, centerY, angleY, angleX);
         });
 
-        // Draw Star
-        const starPos = project(
-          star.x,
-          star.y,
-          star.z,
-          angleY,
-          angleX,
-          centerX,
-          centerY
-        );
-        if (starPos.scale > 0) {
-          ctx.fillStyle = `gold`;
-          ctx.beginPath();
-          ctx.arc(starPos.x, starPos.y, 10 * starPos.scale, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.shadowBlur = 20;
-          ctx.shadowColor = "gold";
-          ctx.fill();
-          ctx.shadowBlur = 0;
+        // Draw Star (Scale down in Galaxy Mode)
+        if (explosionFactor < 0.8) {
+          const starPos = project(
+            star.x,
+            star.y,
+            star.z,
+            angleY,
+            angleX,
+            centerX,
+            centerY
+          );
+          if (starPos.scale > 0) {
+            const fade = 1 - explosionFactor;
+            ctx.fillStyle = `rgba(255, 215, 0, ${fade})`; // Gold with Fade
+            ctx.beginPath();
+            ctx.arc(
+              starPos.x,
+              starPos.y,
+              10 * starPos.scale * fade,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = `rgba(255, 215, 0, ${fade})`;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
         }
 
         requestAnimationFrame(draw);
       }
 
+      // Scroll Interaction for Galaxy Explosion
+      window.addEventListener("wheel", (e) => {
+        // Scroll Up (deltaY < 0) -> Explode
+        // Scroll Down (deltaY > 0) -> Implode
+        if (e.deltaY < 0) {
+          targetExplosionFactor += 0.1;
+        } else {
+          targetExplosionFactor -= 0.1;
+        }
+        // Clamp
+        if (targetExplosionFactor < 0) targetExplosionFactor = 0;
+        if (targetExplosionFactor > 1) targetExplosionFactor = 1;
+      });
+
       // Mouse Interactions
       canvas.addEventListener("mousedown", (e) => {
+        // Light Color Interaction
+        if (e.button === 0) {
+          // Left Click: Next Color
+          currentLightColorIndex =
+            (currentLightColorIndex + 1) % lightColors.length;
+        } else if (e.button === 2) {
+          // Right Click: Prev Color
+          currentLightColorIndex =
+            (currentLightColorIndex - 1 + lightColors.length) %
+            lightColors.length;
+        }
+
         dragging = true;
+      });
+
+      // Prevent Context Menu on Right Click
+      canvas.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
       });
 
       window.addEventListener("mouseup", () => {
@@ -446,8 +622,23 @@
 
           lastMouseX = e.clientX;
           lastMouseY = e.clientY;
+        } else {
+          // Update last position even if not dragging to prevent jump on click
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
         }
       });
+      // Initial set to avoid 0 jump
+      window.addEventListener(
+        "mousemove",
+        (e) => {
+          if (!dragging) {
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+          }
+        },
+        { once: true }
+      );
 
       draw();
     </script>
